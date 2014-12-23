@@ -65,7 +65,7 @@ describe Pavlov::Operation do
         dummy_class = Class.new do
           include Pavlov::Operation
           attribute :title,   String, default: 'A title'
-          attribute :date,    Time,   default: -> { Time.now }
+          attribute :date,    Time,   default: ->  (_, _)  { Time.now }
           attribute :visible, String, default: nil
         end
         expect(dummy_class.new.valid?).to be_true
@@ -87,6 +87,27 @@ describe Pavlov::Operation do
           expect { dummy_class.new.call }.to raise_error  Pavlov::ValidationError, 'title should not be empty'
         end
       end
+    end
+  end
+
+  describe 'strict coercions' do
+    let(:dummy_class) do
+      Class.new do
+        include Pavlov::Operation
+        attribute :number, Integer, strict: true
+
+        def getter
+          attribute_set.each do |attribute|
+            pp attribute.options[:strict]
+          end
+          yes_or_no
+        end
+      end
+    end
+
+    it 'raises when passed a value thats not coercable' do
+      expect { dummy_class.new(number: 'string') }.to raise_error Virtus::CoercionError,
+        'Failed to coerce attribute `number\' from "string" into Integer'
     end
   end
 

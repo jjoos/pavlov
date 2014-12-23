@@ -1,3 +1,5 @@
+require 'active_support/all'
+
 module Pavlov
   # this method is also available as constantize in Rails,
   # but we want to be able to write classes and/or tests without Rails

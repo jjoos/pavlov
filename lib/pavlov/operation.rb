@@ -10,7 +10,7 @@ module Pavlov
   module Operation
     extend Pavlov::Concern
     include Pavlov::Helpers
-    include Virtus
+    include Virtus.module
 
     def valid?
       check_validation
