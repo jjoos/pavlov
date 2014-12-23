@@ -71,12 +71,21 @@ describe Pavlov::Operation do
         expect(dummy_class.new.valid?).to be_true
       end
 
-      it 'fails when not given a value' do
-        dummy_class = Class.new do
-          include Pavlov::Operation
-          attribute :title, String
+      context 'with a missing value' do
+        let(:dummy_class) do
+          Class.new do
+            include Pavlov::Operation
+            attribute :title, String
+          end
         end
-        expect(dummy_class.new.valid?).to be_false
+
+        it 'operation is invalid withoud mandotary attribute' do
+          expect(dummy_class.new.valid?).to be_false
+        end
+
+        it 'raises when called with a missing value' do
+          expect { dummy_class.new.call }.to raise_error  Pavlov::ValidationError, 'title should not be empty'
+        end
       end
     end
   end

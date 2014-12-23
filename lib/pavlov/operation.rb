@@ -35,8 +35,19 @@ module Pavlov
       raise Pavlov::AccessDenied, message
     end
 
+    def raise_on_argument_missing
+      if missing_arguments.any?
+        error_message = missing_arguments.map do |argument|
+          "#{argument.name} should not be empty"
+        end.join(', ')
+
+        raise Pavlov::ValidationError,  error_message
+      end
+    end
+
     def check_validation
-      raise Pavlov::ValidationError, "Missing arguments: #{missing_arguments.inspect}" if missing_arguments.any?
+      raise_on_argument_missing
+
       validate
     end
 
