@@ -38,7 +38,7 @@ module Pavlov
     def raise_on_argument_missing
       if missing_arguments.any?
         error_message = missing_arguments.map do |argument|
-          "#{argument.name} should not be empty"
+          "#{argument.name} should not be empty or nil"
         end.join(', ')
 
         raise Pavlov::ValidationError,  error_message
